@@ -1,20 +1,42 @@
-import type { Config } from "tailwindcss";
+import type { Config } from "tailwindcss"
 
-const config: Config = {
-  content: [
-    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+const config = {
+  plugins: [
+    require('tailwindcss-animated')
   ],
+  darkMode: ["class"],
+  content: [
+    './pages/**/*.{ts,tsx}',
+    './components/**/*.{ts,tsx}',
+    './app/**/*.{ts,tsx}',
+    './src/**/*.{ts,tsx}',
+	],
+  prefix: "",
   theme: {
-    extend: {
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+    container: {
+      center: true,
+      padding: "2rem",
+      screens: {
+        "2xl": "1400px",
       },
     },
+    extend: {
+      colors: {
+        "text-color": "rgba(var(--text-color) / <alpha-value>)",
+        "button-color": "rgba(var(--button-color) / <alpha-value>)",
+        "text-color-currencie": "rgba(var(--text-color-currencie) / <alpha-value>)",
+        "color-blocked": "rgba(var(--color-blocked) / <alpha-value>)",
+        "color-details": "rgba(var(--color-details) / <alpha-value>)",
+        "color-separate": "rgba(var(--color-separate) / <alpha-value>)",
+        "color-border-metmask": "rgba(var(--color-border-metmask) / <alpha-value>)",
+        "text-color-selection": "rgba(var(--text-color-selection) / <alpha-value>)",
+        primary: "rgba(var(--primary) / <alpha-value>)"
+      },
+      borderRadius:{
+        
+      }  
+    },
   },
-  plugins: [],
-};
-export default config;
+} satisfies Config
+
+export default config

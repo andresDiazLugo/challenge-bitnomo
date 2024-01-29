@@ -1,33 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
+ 
+@layer base {
   :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
-}
-
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-}
-
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+    --primary:0 0 0;
+    --secondary: 0 0 0;
+    --text-color: 0 40 89;
+    --button-color: 3 90 197;
+    --text-color-currencie: 100, 113, 132;
+    --color-blocked:198 223 254;
+    --color-details: 249 250 252;
+    --color-separate: 192 204 218;
+    --color-border-metmask: 229 233 242;
+    --text-color-selection: 100 113 132;
   }
 }
