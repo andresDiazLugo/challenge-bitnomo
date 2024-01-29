@@ -1,6 +1,9 @@
 import type { Config } from "tailwindcss"
 
 const config = {
+  plugins: [
+    require('tailwindcss-animated')
+  ],
   darkMode: ["class"],
   content: [
     './pages/**/*.{ts,tsx}',
@@ -19,9 +22,14 @@ const config = {
     },
     extend: {
       colors: {
-        "text-color": "#002859",
-        "button-color": "#035AC5",
-        "text-color-currencie":"#647184",
+        "text-color": "rgba(var(--text-color) / <alpha-value>)",
+        "button-color": "rgba(var(--button-color) / <alpha-value>)",
+        "text-color-currencie": "rgba(var(--text-color-currencie) / <alpha-value>)",
+        "color-blocked": "rgba(var(--color-blocked) / <alpha-value>)",
+        "color-details": "rgba(var(--color-details) / <alpha-value>)",
+        "color-separate": "rgba(var(--color-separate) / <alpha-value>)",
+        "color-border-metmask": "rgba(var(--color-border-metmask) / <alpha-value>)",
+        "text-color-selection": "rgba(var(--text-color-selection) / <alpha-value>)",
         primary: "rgba(var(--primary) / <alpha-value>)"
       },
       borderRadius:{

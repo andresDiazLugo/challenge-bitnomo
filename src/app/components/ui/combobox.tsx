@@ -1,60 +1,63 @@
 "use client"
-import React, { useState, useEffect, useRef } from 'react';
-import { FaSearch } from "react-icons/fa";
-import { getCurrencies } from "@services/currencies";
-import { Currencies } from "@type/currencies";
+import { Label } from '@components/ui/label';
+import React, { useState, useEffect } from 'react';
+import { getCurrencies } from '@services/currencies';
+import { Currencies } from '@type/currencies';
+import Image from 'next/image';
+import OptionCrypto from '@svg/optionCrypto.svg';
+import CryptoSelectActive from '@svg/checkSelectCrypto.svg';
+interface ComboboxProps{
+  handleCurrencySelect: (currencie: Currencies) => void,
+}
 
-export const Combobox: React.FC = () => {
+export const Combobox: React.FC<ComboboxProps> = ({handleCurrencySelect}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [currencies,setCurrencies] = useState<Currencies[]>([]);
-  const dropdownButtonRef = useRef<HTMLButtonElement>(null);
-  const dropdownMenuRef = useRef<HTMLDivElement>(null);
+  const [selectCurrencie,setSelectCurrencie] = useState<Currencies>();
+ 
 
   useEffect(() => {
-    getCurrencies().then(data=>{setCurrencies(data)}).catch(err=>{console.log(err)})
-    // document.addEventListener('click', handleOutsideClick);
-    // return () => {
-    //   document.removeEventListener('click', handleOutsideClick);
-    // };
+    getCurrencies()
+    .then(data=>{
+      if(data !== undefined && Array.isArray(data)){
+        setCurrencies(data)
+        handleSelectCurrencie(data[1]);
+      }
+    }).catch(err=>{console.log(err)})
+  
   }, []);
 
   const handleToggleDropdown = () => {
     setIsOpen(!isOpen);
   };
 
-//   const handleOutsideClick = (event: MouseEvent) => {
-//     if (isOpen && dropdownButtonRef.current && dropdownMenuRef.current) {
-//       if (
-//         !event.target ||
-//         !(
-//           event.target instanceof Node &&
-//           (dropdownButtonRef.current.contains(event.target) || dropdownMenuRef.current.contains(event.target))
-//         )
-//       ) {
-//         setIsOpen(false);
-//       }
-//     }
-//   };
-
   const handleSearchInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value.toLowerCase());
   };
-
-  const dropdownItems = ["Uppercase", "Lowercase", "Camel Case", "Kebab Case"];
+  const handleSelectCurrencie = (currencie:Currencies | null)=>{
+    if(currencie !== null){
+      localStorage.setItem("imgCrypto",currencie.image);
+      setSelectCurrencie(currencie);
+      handleCurrencySelect(currencie);
+      setIsOpen(false);
+    }
+  }
 
   return (
     <div>
-      <div className="relative group">
+      <div className="relative group ">
+      <Label className='text-[14px]  font-[700] text-text-color'>
+                Seleccionar moneda
+      </Label>
         <button
-          ref={dropdownButtonRef}
-          id="dropdown-button"
-          className="inline-flex justify-between w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-blue-500"
+          type="button"
+          className="inline-flex justify-between w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded-md shadow-sm focus:outline-none border border-gray-300"
           onClick={handleToggleDropdown}
         >
           <div className="flex gap-2 items-center">
-            <img src={currencies[1]?.image}  className="w-[32px] h-[32px]"/>
-            <span className="mr-2">{currencies[1]?.name}</span>
+            <img src={selectCurrencie?.image}  className="w-[32px] h-[32px] animate-wiggle-more animate-infinite animate-duration-[1300ms]"/>
+            <span className="mr-2">{selectCurrencie?.name}</span>
           </div>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -67,33 +70,53 @@ export const Combobox: React.FC = () => {
           </svg>
         </button>
         <div
-          ref={dropdownMenuRef}
           id="dropdown-menu"
-          className={`${ isOpen ? '' : 'hidden'} absolute w-full mt-2 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 p-1 space-y-1`}
+          className={`${ isOpen ? "" : "hidden"}  absolute w-full top-0  rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 p-5 space-y-1 animate-fade-down`}
         >
-          {/* Search input */}
-          <FaSearch className="absolute top-7 left-2 transform -translate-y-1/2 w-4 h-4 text-gray-500"/>
-          <input
-            id="search-input"
-            className="block pl-7 w-full px-4 py-2 text-gray-800 border rounded-md  border-gray-300 focus:outline-none"
-            type="text"
-            placeholder="Search items"
-            autoComplete="off"
-            value={searchTerm}
-            onChange={handleSearchInput}
-          />
-          {/* Dropdown content goes here */}
+          {/* Search input */}   
+          <div className='flex items-center justify-between p-1'>
+            <Label className='text-[14px]  font-[700] text-text-color'>
+                Seleccionar moneda
+            </Label>
+            <button type='button' onClick={handleToggleDropdown}>X</button>
+          </div>
+          <label className='flex items-center border gap-2 px-3 rounded'>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9.58317 18.125C4.87484 18.125 1.0415 14.2917 1.0415 9.58334C1.0415 4.87501 4.87484 1.04167 9.58317 1.04167C14.2915 1.04167 18.1248 4.87501 18.1248 9.58334C18.1248 14.2917 14.2915 18.125 9.58317 18.125ZM9.58317 2.29167C5.55817 2.29167 2.2915 5.56667 2.2915 9.58334C2.2915 13.6 5.55817 16.875 9.58317 16.875C13.6082 16.875 16.8748 13.6 16.8748 9.58334C16.8748 5.56667 13.6082 2.29167 9.58317 2.29167Z" fill="#647184"/>
+            <path d="M18.3335 18.9587C18.1752 18.9587 18.0169 18.9004 17.8919 18.7754L16.2252 17.1087C15.9835 16.867 15.9835 16.467 16.2252 16.2254C16.4669 15.9837 16.8669 15.9837 17.1085 16.2254L18.7752 17.892C19.0169 18.1337 19.0169 18.5337 18.7752 18.7754C18.6502 18.9004 18.4919 18.9587 18.3335 18.9587Z" fill="#647184"/>
+            </svg>
+            <input
+              id="search-input"
+              className="block w-full py-2 text-gray-800 border-none rounded-md  border-gray-300  focus:outline-none"
+              type="text"
+              placeholder="Buscar"
+              autoComplete="off"
+              value={searchTerm}
+              onChange={handleSearchInput}
+            />
+          </label>  
+          {/* Dropdown contenido*/}
           <ul>
             {currencies?.map((item, index) => (
                 <li
+                onClick={()=>handleSelectCurrencie(item)}
                 key={index}
-                className={`${item.name.toLowerCase().includes(searchTerm) ? '': 'hidden'} block px-4 py-2 text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer rounded-md flex gap-2`}
+                className={`${item.name.toLowerCase().includes(searchTerm) ? "": "hidden"} px-4 py-2 text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer rounded-md flex justify-between `}
                 >
-                <img src={item.image}  className="w-[32px] h-[32px]"/>  
-                <div>
-                    <p className='font-[700] text-text-color'>{item.name}</p>
-                    <p className='text-xs text-text-color-currencie'>{item.blockchain}</p>
-                </div>  
+                  <div className="flex  gap-2">
+                    <img src={item.image}  className="w-[32px] h-[32px] animate-wiggle-more animate-infinite animate-duration-[1300ms]" alt="cripto"/>  
+                    <div >
+                        <p className="font-[700] text-text-color">{item.name}</p>
+                        <p className="text-xs text-text-color-currencie">{item.blockchain}</p>
+                        
+                    </div>  
+                  </div>
+                  {
+                   selectCurrencie?.symbol === item.symbol ?
+                  <Image  src={CryptoSelectActive} alt="selecionar"/>
+                  :
+                  <Image  src={OptionCrypto} alt="selecionar"/>
+                  }
                 </li>
             ))}
           </ul>
