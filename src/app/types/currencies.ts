@@ -1,3 +1,9 @@
+declare global {
+    interface Window {
+      ethereum?: any
+    }
+}
+
 export interface Currencies{
     symbol: "string",
     name: "string",
@@ -6,3 +12,4 @@ export interface Currencies{
     image: "string",
     blockchain: "string"
 }
+

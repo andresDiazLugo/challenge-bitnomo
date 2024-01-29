@@ -26,6 +26,7 @@
       "@services/*": ["src/app/services/*"],
       "@type/*": ["src/app/types/*"],
       "@lib/*": ["src/lib/*"],
+      "@svg/*":["public/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

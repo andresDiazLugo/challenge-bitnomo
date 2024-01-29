@@ -1,17 +1,18 @@
-import type {  Currencies  }  from "@type/currencies";
-import { APIUrls } from './urls';
-export async function getCurrencies(){
+import type {  Currencies  }  from '@type/currencies';
+import { APIUrls, HEADERS } from './urls';
+export async function getCurrencies():Promise<Currencies | void>{
     const requestOptions = {
         method: 'GET', 
         headers:{
-            'X-Device-Id':'d6aac8e9-ed6c-4135-a5c7-f3b4bba5c31b'
+            'X-Device-Id': HEADERS.header
         }
     }
     try {
         const response = await fetch(APIUrls.get.currencies,requestOptions)
-        const data = await response.json();
-        return data
+        const currencies = await response.json();
+        return currencies
     } catch (error) {
         console.log(error)
     }
 }
+
