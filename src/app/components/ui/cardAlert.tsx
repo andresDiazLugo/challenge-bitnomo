@@ -11,7 +11,7 @@ interface Params{
 interface Props{
     params: Params
 }
-export default function cardAlert({params}:Props) {
+export default function CardAlert({params}:Props) {
     const router = useRouter();  
   return (
     <div className="flex justify-center items-center h-screen">
