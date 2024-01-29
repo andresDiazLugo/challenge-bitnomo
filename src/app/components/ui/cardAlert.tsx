@@ -12,7 +12,10 @@ interface Props{
     params: Params
 }
 export default function CardAlert({params}:Props) {
-    const router = useRouter();  
+    const router = useRouter();
+    const redirectioPageCreatePayment = ()=>{
+        router.replace('/')
+    }
   return (
     <div className="flex justify-center items-center h-screen">
         <div className="max-w-[420px] h-[420px] p-[32px] shadow-lg rounded-[16px] flex flex-col justify-center items-center">
@@ -38,7 +41,7 @@ export default function CardAlert({params}:Props) {
                 </div>
             </div>
             <div className="w-full">
-                <Button params={{activateButton:false,loading:false,eventExecute:()=>{router.push('/')}}}/>
+                <Button params={{activateButton:false,loading:false,eventExecute:redirectioPageCreatePayment}}/>
             </div>
         </div>
     </div>
