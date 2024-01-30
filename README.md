@@ -1,4 +1,17 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+Challenge tecnico de BITNOMO
+. Aplicacion desarrollada con react, nextjs,typescript y tailwind
+Introduccion
+.La aplicacion consta de los siguiente un usuario va a poder generar un pago introduciendo un monto, una crypto moneda y una descripcion
+si el usuario lo deseara una vez llenos los campos se creara un pago y lo redirigira a los detalles de la transaccion donde podra ver
+la direccion de la wallet y el monto a pagar, tambien podras scanear en un codigo QR la informacion en caso de que el usuario quisiera,
+el usuario tendra un tiempo limitado para realizar la trasaccion y en caso de que ese tiempo finaliza la transaccion de ese pago se cancela
+y lo redirige a una seccion dpnde se le informa que no se pudo realizar el pago, y en caso de que el usuario complete el pago, la aplicacion
+lo redirige a una seccion donde se le informa que el pago fue exitoso, el usuario tambien tendra la opcion de conectarse a metamask para
+realizar sus transacciones y tambien poder desconectarse de metamask en caso de que lo deseara.
+
+Datos de contacto
+. Email: andresd.ad5@gmail.com
+. Telefono Movil: 3876116914
 
 ## Getting Started
 
@@ -13,24 +26,3 @@ pnpm dev
 # or
 bun dev
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
