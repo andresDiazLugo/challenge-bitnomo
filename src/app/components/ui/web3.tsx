@@ -5,18 +5,22 @@ import Image from 'next/image';
 export default function Web3() {
   const [buttonText, setButtonText] = useState(null);
   const [account, setAccount] = useState(null);
+  const [loading, setLoading] = useState(false)
 
   const connectWallet = () => {
     if (window.ethereum && window.ethereum.isMetaMask) {
+      setLoading(true);
       window.ethereum
         .request({ method: 'eth_requestAccounts' })
         .then((result:any) => {
+          setLoading(false);
           alert(`Conectado, esta es tu dirección: ${result[0]}`);
           setAccount(result[0]);
         })
         .catch((err: any) => {
           console.log(err.message);
           alert("Ocurrió un error inesperado al conectar a Metamask");
+          setLoading(false)
           setButtonText(err.message);
         });
     } else {
@@ -57,9 +61,14 @@ export default function Web3() {
       {account ? (
         <button className='font-semibold bg-red-300 p-2 rounded-md' onClick={disconnectWallet}>Desconectar</button>
       ) : (
-        <div onClick={connectWallet}>
-          <Image src={Metamask} alt="Metamask conexión" />
-        </div>
+        <button onClick={connectWallet}>
+          {
+            loading ?
+            <span>Cargando...</span>
+            :
+            <Image src={Metamask} alt="Metamask conexión" />
+          }
+        </button>
       )}
     </div>
   );
