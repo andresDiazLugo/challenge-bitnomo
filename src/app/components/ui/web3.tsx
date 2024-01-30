@@ -61,7 +61,7 @@ export default function Web3() {
       {account ? (
         <button className='font-semibold bg-red-300 p-2 rounded-md' onClick={disconnectWallet}>Desconectar</button>
       ) : (
-        <button onClick={connectWallet}>
+        <button className='w-full h-full' onClick={connectWallet}>
           {
             loading ?
             <span>Cargando...</span>
