@@ -5,8 +5,8 @@ import "./globals.css";
 const inter = Mulish({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Challenge bitnomo",
-  description: "challenge for bitnomo",
+  title: "Challenge bitnovo",
+  description: "challenge for bitnovo",
 };
 
 export default function RootLayout({
