@@ -91,10 +91,10 @@ export default function Payment({ params }: Props) {
   },[render])
 
   return (
-<section className="h-screen flex items-center justify-center">
+<section className="h-auto lg:h-screen bg-white flex items-center justify-center">
   {
   orderInfo?.map((order, i)=>
-    <div key={i} className="h-screen lg:h-auto grid grid-cols-1 max-w-[1198px] gap-[32px] md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2">
+    <div key={i} className="lg:h-auto grid grid-cols-1 max-w-[1198px] gap-[32px] md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2">
     <div className="flex flex-col max-w-[583px] xl:w-[583px] gap-[24px]">
       <h3 className="mb-3 text-primary text-[20px] font-[700] leading-[25px]">Resumen del pedido</h3>
       <div className="bg-color-details h-[370px] p-[32px]  rounded-[16px] ">
