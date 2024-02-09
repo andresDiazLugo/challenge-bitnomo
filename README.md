@@ -1,4 +1,4 @@
-Challenge tecnico de BITNOMO
+Challenge tecnico de BITNOVO
 . Aplicacion desarrollada con react, nextjs,typescript y tailwind
 Introduccion
 .La aplicacion consta de los siguiente un usuario va a poder generar un pago introduciendo un monto, una crypto moneda y una descripcion

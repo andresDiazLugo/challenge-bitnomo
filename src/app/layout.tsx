@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import { Mulish } from "next/font/google";
+import Footer from "./components/ui/footer";
 import "./globals.css";
 
 const inter = Mulish({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Challenge bitnomo",
-  description: "challenge for bitnomo",
+  title: "Challenge bitnovo",
+  description: "challenge for bitnovo",
 };
 
 export default function RootLayout({
@@ -16,11 +17,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+        <link rel="icon logo" href="/logo.svg" />
         <body className={inter.className}>
         <main className="min-h-screen">
           {
           children
           }
+        <Footer/>
         </main>
         </body>
     </html>

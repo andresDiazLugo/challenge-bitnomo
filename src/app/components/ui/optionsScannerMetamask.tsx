@@ -25,7 +25,7 @@ export default function OptionsScannerMetamask({params}:Props) {
   
         <>
 
-            <div  className="flex items-center justify-center gap-4"> 
+            <div  className="flex items-center justify-center gap-[16px]"> 
                 <button 
                     onClick={() => handleOptionClick('smartQR')}
                     className={`text-center   rounded-[100px] pt-[6px] pr-[12px] pb-[6px] pl-[12px] ${selectedOption === 'smartQR' ? "bg-button-color text-white " : "bg-color-details text-text-color-selection"}`}>Smart QR</button>
