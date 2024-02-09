@@ -4,9 +4,9 @@
  
 @layer base {
   :root {
-    --primary:0 0 0;
+    --primary:0 40 89;
     --secondary: 0 0 0;
-    --text-color: 0 40 89;
+    --text-color: 0,40 89;
     --button-color: 3 90 197;
     --text-color-currencie: 100, 113, 132;
     --color-blocked:198 223 254;
