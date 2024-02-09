@@ -45,7 +45,7 @@ export default function Copy({ params }: Props) {
             ...params.copyState,
             [params.key]: false,
           });
-        }, 500);
+        }, 300);
       }
     };
   
@@ -61,9 +61,9 @@ export default function Copy({ params }: Props) {
     return (
       <>
         {params.copyState[params.key] ? (
-          <p className="bg-black text-white rounded-md text-xs p-1 animate-jump">Copy</p>
+          <p className="bg-black font-bold text-white rounded-md text-[8px] text-center w-[22px] pt-1 pb-1 animate-jump">Copy</p>
         ) : (
-          <Image onClick={handleCopyClick} className="cursor-pointer" src={CopyText} alt="Copy text" />
+          <Image onClick={handleCopyClick} className="cursor-pointer w-[22px] h-[18px]" src={CopyText} alt="Copy text" />
         )}
       </>
     );

@@ -2,124 +2,166 @@
 import { Label } from '@components/ui/label';
 import { Input } from '@components/ui/input';
 import { Combobox }  from '@/app/components/ui/combobox';
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { Currencies } from '../types/currencies';
 import { postOrder } from '@services/orders';
 import { OrderPost } from '../types/orders';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/app/components/ui/button';
-import { pageRedirect } from '@services/urls'
+import { pageRedirect } from '@services/urls';
+import { useFormik, FormikErrors  } from 'formik';
+interface FormValues {
+  amount: string;
+  currency: Currencies | null;
+  description: string;
+}
 export default function CreatePayment() {
   const router = useRouter();
-  const [activeButton,setActiveButton] = useState(true);
-  const [loading,setLoading] = useState(false)
-  const [formData,setFormData] = useState<{
-    amount: string,
-    currency: Currencies | null,
-    description: string
-  }>({
-    amount: '0',
-    currency: null ,
-    description: ''
-  })
-
-  //seleccion las tipo de criptomonedas 
-  const handleCurrencySelect = (selectedCurrency:Currencies) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      currency: selectedCurrency,
-    }));
-  };
-  //selecciono el saldo de la moneda controlando que no se ingrese texto solo enteros y decimales
-  const handleChangeAmount = (event:ChangeEvent<HTMLInputElement>) =>{
-    const {value} = event.target;
-    const comprobate = comprobateAmount(value)
-    setActiveButton(comprobate);
-    if (/^\d*([\.,]\d{0,2})?$/.test(value)) {
-      setFormData((prevData) => ({
-        ...prevData,
-        amount:value,
-      }));
-    }
-  }
-  //guardar y capturar los valores de la descripcion
-  const handleChange = (event:ChangeEvent<HTMLInputElement>)=>{
-    const {name,value} = event.target;
-    setFormData((prevData)=> (
-      {
-        ...prevData,
-        [name]: value 
-      }
-    ));
-  }
-  // enviar los datos recolectados y hacer peticion a la api y restablecer los inputs
-  const handleSubmit = (event:FormEvent<HTMLFormElement>) => {
-    setLoading(!loading);
-    setActiveButton(!activeButton);
-    event.preventDefault()
-    const bodyPostOrder: OrderPost = {
-      expected_output_amount: parseFloat(formData.amount),
-      input_currency:formData.currency?.blockchain as string,
-      merchant_urlko: pageRedirect.pageError,
-      merchant_urlok: pageRedirect.pageConfirm,
-      notes: formData.description,
-    }
-    setFormData(
-      {
-        ...formData,
-        amount:'',
-        description:''
-      }
-    )
-
-    postOrder(bodyPostOrder)
-    .then(data => {
-      if(data !== undefined){
-        setLoading(!loading);
-        setActiveButton(!activeButton);
-        router.replace(`/order/${data.identifier}`);
-      }
-      
-    })
-    .catch(err => {
+  const [loading,setLoading] = useState(false);
+  const [currency,setCurrency] = useState<Currencies>();
+  const formik = useFormik<FormValues>({
+    // estados del formulario
+    initialValues: {
+      amount: '',
+      currency:null,
+      description: ''
+    },
+    // Función que se ejecuta al enviar el formulario
+    onSubmit: (values, actions) => {
       setLoading(!loading);
-      setActiveButton(!activeButton);
-    })
-  }
-  const comprobateAmount = (amount:string) => {
-    const value_max = formData.currency?.max_amount;
-    const value_min =  formData.currency?.min_amount;
-    // Verifica si value_max y value_min son definidos antes de realizar la comprobación
-    if (value_max !== undefined && value_min !== undefined) {
-      return  !(parseFloat(amount) >= parseFloat(value_min) && parseFloat(amount)  <= parseFloat(value_max));    
+      const bodyPostOrder: OrderPost = {
+        expected_output_amount: parseFloat(values.amount),
+        input_currency:currency?.blockchain as string,
+        merchant_urlko: pageRedirect.pageError,
+        merchant_urlok: pageRedirect.pageConfirm,
+        notes: values.description,
+      }
+      actions.resetForm({
+        values: {
+          amount: '',
+          description: '',
+          currency: null
+        }
+      }) 
+      postOrder(bodyPostOrder)
+      .then(data => {
+        if(data !== undefined){
+          setLoading(!loading);
+          // setActiveButton(!activeButton);
+          
+          router.replace(`/order/${data.identifier}`);
+        }
+        
+      })
+      .catch(err => {
+        setLoading(!loading);
+      })
+    },
+    // Validación de campos
+    //se puede validar mas campos pero solamente voy a usar el de amount
+    validate: (values) => {
+      const errors: FormikErrors<FormValues> = {};
+      // Validar el campo 'amount'
+      if (!/^\d*([\.,]\d{0,2})?$/.test(values.amount)) {
+        errors.amount = 'Ingrese solo números';
+      }
+      if (!values.amount) {
+        errors.amount = '*El campo amount es requerido';
+      }
+      if(!comprobateValuesAmount(values.amount,currency?.min_amount,currency?.max_amount,) && values.amount !== ''){
+        errors.amount = `importe minimo: ${values.currency?.min_amount}, importe maximo: ${values.currency?.max_amount} de ${currency?.name}`;
+      }
+      if(!values.description){
+        errors.description = '*El campo es requerido'
+      }
+      return errors;
+    },
+
+  });
+
+  //seleccion las tipo de criptomonedas y uso la funcion handleFormValues para que se ejecute la funcion cada vez que hacemos cambios en los campos del formulario
+  //uso este metodo por que tengo un componente combobox personalizado ya que necesito recolectar los datos que recaudo en mi componente 
+  const handleCurrencySelect = (selectedCurrency:Currencies,e:React.MouseEvent<HTMLLIElement, MouseEvent> | undefined) => {
+    setCurrency(selectedCurrency); 
+    // console.log("ejecutando",selectedCurrency) 
+    if(e !== undefined){
+      handleFormValues(e,selectedCurrency);
     }
-    return false
+  };
+ 
+  //detecta el campo y guarda sus valores en el estado de formik segun le corresponda a las claves del estado
+  const handleFormValues = (event: ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLLIElement, MouseEvent>,optional:undefined | Currencies) => {
+    if (event !== undefined) {
+      if ('name' in event.target) {
+        const { name, value } = event.target as HTMLInputElement;
+        if (name === 'amount' && /^\d*([\.,]\d{0,2})?$/.test(value)) {
+          formik.handleChange(event);
+          formik.setFieldValue('amount', value);
+        } else if (name === 'description') {
+          formik.handleChange(event);
+          formik.setFieldValue('description', value);
+        }
+      } else if (event.currentTarget.dataset.id) {
+        console.log("no entraa",currency)
+        formik.handleChange(event.currentTarget.dataset.id);
+        formik.setFieldValue('currency', optional);
+      }
+    }
+  };
+
+  //comparamos los valores de amount con los valores minimo y maximo de la cripto elegida, este metodo lo usamos en el validate de formik
+  const comprobateValuesAmount = (amount:string,min:string | undefined,max:string | undefined) =>{
+    const value_max = max;
+    const value_min = min;
+
+    if (value_max !== undefined && value_min !== undefined && amount.length ) {
+      return  (parseFloat(amount) >= parseFloat(value_min) && parseFloat(amount)  <= parseFloat(value_max));    
+    }
+    return false;
   }
+
   return (
     <section className="flex items-center justify-center h-screen">
-      <form onSubmit={handleSubmit} className='g-white max-w-[673px] max-h-[530px] flex-1 m-auto p-[32px] border flex flex-col gap-6 rounded-[6px] shadow-lg' >
-          <h2 className=' leading-[40.56px] text-primary font-[700] text-[30px] text-center'>Crear pago</h2>
-          <div>
-            <Label className='text-[14px] font-[700] text-text-color'>
+      <form
+      onSubmit={formik.handleSubmit}
+      className='w-full lg:max-w-[673px] h-[530px] flex flex-col justify-center items-center rounded-[16px] border-[1px] p-[32px] m-[32px] shadow-lg'  
+       >
+        <div  
+        className=' w-full  lg:w-[609px]   flex flex-col gap-[32px]'>
+
+          <h2 className='font-bold text-3xl text-primary leading-[38px] text-center'>Crear pago</h2>
+          <div className=' w-full lg:w-[609px] h-[80px] flex flex-col gap-[4px] relative'>
+            <Label className='text-[14px] font-[700] text-primary text-14 leading-20 tracking-tight'>
               Importe a pagar 
             </Label>
-            {
-            activeButton
-             &&
-            <p className=' text-red-600'>importe minimo:{formData.currency?.min_amount} y importe maximo:{formData.currency?.max_amount} de {formData.currency?.name}</p>
-            }
-            <Input name='amount' type='text' placeholder='Añade importe a pagar' value={formData.amount[0] === '0' ? '' : formData.amount} onChange={(e)=>handleChangeAmount(e)}/>
+            {formik.errors.amount && (
+            <p className='text-red-600 animate-fade-down absolute top-0 left-0 bg-white '>{formik.errors.amount}</p>
+            )}
+            <Input
+            name='amount'
+            type='text' 
+            placeholder='Añade importe a pagar' 
+            value={formik.values.amount} 
+            onChange={(e)=>handleFormValues(e,undefined)}
+            />
           </div>
-          <div>
-            <Combobox  handleCurrencySelect={handleCurrencySelect} />
-          </div>
-          <div>
-            <Label className='text-[14px]  font-[700] text-text-color'>
+          {/* <div className='w-[609px] h-[80px]'> */}
+            <Combobox  handleCurrencySelect={handleCurrencySelect} valueOptions={JSON.stringify(formik.values.currency)} />
+          {/* </div> */}
+          <div className='w-full lg:max-w-[609px] h-[80px] flex flex-col gap-[4px]'>
+            <Label className='text-[14px] font-[700] text-primary text-14 leading-20 tracking-tight'>
               Concepto
             </Label>
-            <Input value={formData.description} name='description' type='text' placeholder='Añade descripción del pago' onChange={(e)=>handleChange(e)}/>
+            <Input
+            value={formik.values.description} 
+            name='description' 
+            type='text' 
+            placeholder='Añade descripción del pago' 
+            onChange={(e)=>handleFormValues(e,undefined)}
+            />
           </div>
-          <Button params={{loading:loading,activateButton:activeButton, eventExecute:()=>{}}} />
+          <Button params={{loading:loading,activateButton:!formik.isValid || !formik.dirty, eventExecute:()=>{}}} />
+        </div>
       </form>
     </section>
   )

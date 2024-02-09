@@ -9,7 +9,7 @@ interface Params {
   }
 export  function Button({params}:Props) {
   return (
-    <button onClick={params.eventExecute} disabled={params.activateButton} type='submit' className={`${params.activateButton ? 'bg-color-blocked' : 'bg-button-color'}  text-white h-[56px] rounded-[6px] flex items-center justify-center w-full`}>
+    <button onClick={params.eventExecute} disabled={params.loading} type='submit' className={`${params.activateButton ? 'bg-color-blocked' : 'bg-button-color'}  text-white h-[56px] rounded-[6px] flex items-center justify-center w-full`}>
         { 
         params.loading ?
         <div role="status">
