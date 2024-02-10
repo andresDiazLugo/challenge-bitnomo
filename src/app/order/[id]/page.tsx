@@ -31,8 +31,7 @@ export default function Payment({ params }: Props) {
     }
   );
   const router = useRouter();
-  console.log("me ejecutoo",orderInfo)
-
+ 
   useEffect( ()=>{
       setCryptoImg(localStorage.getItem('imgCrypto') ?? '');
       //conectar el servidor 
