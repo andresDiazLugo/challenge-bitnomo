@@ -31,6 +31,7 @@ export default function Payment({ params }: Props) {
     }
   );
   const router = useRouter();
+  console.log("me ejecutoo",orderInfo)
 
   useEffect( ()=>{
       setCryptoImg(localStorage.getItem('imgCrypto') ?? '');
@@ -140,7 +141,7 @@ export default function Payment({ params }: Props) {
         </div>
       </li>
       <li  className="w-full flex flex-col items-center justify-center gap-9">
-        <OptionsScannerMetamask params={{address:order.address, currency_id:order.currency_id, crypto_amount:order.confirmed_amount, tag_memo:order.tag_memo}}/>
+        <OptionsScannerMetamask params={{address:order.address, currency_id:order.currency_id, crypto_amount:order.crypto_amount, tag_memo:order.tag_memo}}/>
       </li>
       <li className="w-full flex items-center justify-center">
         <div className='flex justify-center items-center gap-[4px]'>
