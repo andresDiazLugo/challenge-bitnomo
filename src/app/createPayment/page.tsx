@@ -2,7 +2,7 @@
 import { Label } from '@components/ui/label';
 import { Input } from '@components/ui/input';
 import { Combobox }  from '@/app/components/ui/combobox';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { Currencies } from '../types/currencies';
 import { postOrder } from '@services/orders';
 import { OrderPost } from '../types/orders';
@@ -83,7 +83,6 @@ export default function CreatePayment() {
   //uso este metodo por que tengo un componente combobox personalizado ya que necesito recolectar los datos que recaudo en mi componente 
   const handleCurrencySelect = (selectedCurrency:Currencies,e:React.MouseEvent<HTMLLIElement, MouseEvent> | undefined) => {
     setCurrency(selectedCurrency); 
-    // console.log("ejecutando",selectedCurrency) 
     if(e !== undefined){
       handleFormValues(e,selectedCurrency);
     }
@@ -102,7 +101,6 @@ export default function CreatePayment() {
           formik.setFieldValue('description', value);
         }
       } else if (event.currentTarget.dataset.id) {
-        console.log("no entraa",currency)
         formik.handleChange(event.currentTarget.dataset.id);
         formik.setFieldValue('currency', optional);
       }
@@ -119,6 +117,7 @@ export default function CreatePayment() {
     }
     return false;
   }
+
 
   return (
     <section className="flex items-center justify-center h-screen">
@@ -146,7 +145,7 @@ export default function CreatePayment() {
             />
           </div>
           {/* <div className='w-[609px] h-[80px]'> */}
-            <Combobox  handleCurrencySelect={handleCurrencySelect} valueOptions={JSON.stringify(formik.values.currency)} />
+            <Combobox  handleCurrencySelect={handleCurrencySelect} valueOptions={formik.values.currency?.blockchain ?? ''} />
           {/* </div> */}
           <div className='w-full lg:max-w-[609px] h-[80px] flex flex-col gap-[4px]'>
             <Label className='text-[14px] font-[700] text-primary text-14 leading-20 tracking-tight'>
