@@ -6,7 +6,7 @@ import { Currencies } from '@type/currencies';
 
 
 interface ComboboxProps{
-  handleCurrencySelect: (currencie: Currencies,e:React.MouseEvent<HTMLLIElement, MouseEvent> | undefined) => void,
+  handleCurrencySelect: (currencie: Currencies,e:React.MouseEvent<HTMLLIElement, MouseEvent> | undefined, cb:()=>void) => void,
   valueOptions:string
 }
 
@@ -33,7 +33,11 @@ export const Combobox: React.FC<ComboboxProps> = ({handleCurrencySelect,valueOpt
     fetchCurrencies();
     handleSelectCurrencie(currencies[1],undefined);
   }, []);
-
+  useEffect(()=>{
+    if(valueOptions === ""){
+      resetInitialState();
+    }
+  },[valueOptions])
   const handleToggleDropdown = () => {
     setIsOpen(!isOpen);
   };
@@ -46,9 +50,12 @@ export const Combobox: React.FC<ComboboxProps> = ({handleCurrencySelect,valueOpt
     if(currencie !== null){
       localStorage.setItem("imgCrypto",currencie?.image);
       setSelectCurrencie(currencie);
-      handleCurrencySelect(currencie,e);
+      handleCurrencySelect(currencie,e,resetInitialState);
       setIsOpen(false);
     }
+  }
+  const resetInitialState = ()=>{
+    setSelectCurrencie(currencies[1]);
   }
 
   return (
