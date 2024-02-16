@@ -66,13 +66,13 @@ export default function CreatePayment() {
         errors.amount = 'Ingrese solo números';
       }
       if (!values.amount) {
-        errors.amount = '*El campo amount es requerido';
+        errors.amount = '*El campo importe es requerido';
       }
       if(!comprobateValuesAmount(values.amount,currency?.min_amount,currency?.max_amount,) && values.amount !== ''){
-        errors.amount = `importe minimo: ${values.currency?.min_amount}, importe maximo: ${values.currency?.max_amount} de ${currency?.name}`;
+        errors.amount = `importe minimo: ${currency?.min_amount}, importe maximo: ${currency?.max_amount} de ${currency?.name}`;
       }
       if(!values.description){
-        errors.description = '*El campo es requerido'
+        errors.description = '*El campo descripcion es requerido'
       }
       return errors;
     },
